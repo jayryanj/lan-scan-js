@@ -6,3 +6,7 @@ Clone the repo then install dependencies by running:
 ```
 npm install
 ```
+To run the API, use the command:
+```
+npm run api
+```
