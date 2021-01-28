@@ -1,0 +1,29 @@
+{
+  "name": "lan-scan-js",
+  "version": "1.0.0",
+  "description": "A local web app to run for device discovery on your LAN",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node index.js",
+    "api": "nodemond index.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/jayryanj/LAN-scan-js.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/jayryanj/LAN-scan-js/issues"
+  },
+  "homepage": "https://github.com/jayryanj/LAN-scan-js#readme",
+  "dependencies": {
+    "body-parser": "^1.19.0",
+    "cors": "^2.8.5",
+    "express": "^4.17.1",
+    "net-ping": "^1.2.3",
+    "nodemon": "^2.0.7"
+  }
+}
