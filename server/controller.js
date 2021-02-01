@@ -3,7 +3,7 @@ const { request, response } = require('express');
 
 
 router.get('/' , (request, response) => {
-    response.status(200).json({message: "Hello, thank you for using LAN-scanner-js"});
+    response.status(200).json({message: "Hello, thank you for using lan-scanner-js"});
 });
 
 router.get('/scan', (request, response) => {
