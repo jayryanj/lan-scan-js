@@ -15,7 +15,7 @@ function getInterface() {
     // 'interface' is a reserved word in strict mode, so it's abbreviated here. 
     const intfs = os.networkInterfaces();
     const platform = os.platform();
-    let intfNames, intfName, netData;
+    let intfNames, intfName, intfData;
 
     if (platform === "linux" || platform === "win32") {
         intfNames = Object.keys(intfs);
@@ -23,15 +23,15 @@ function getInterface() {
             return (intf == "Ethernet" || intf == "Wi-Fi" || intf.substring(0,2) == "en" || intf.substring(0, 2) == "wl")
         }); 
 
-        netData = intfs[intfName].find(net => {
+        intfData = intfs[intfName].find(net => {
             return net.family === "IPv4"
         })
     }
 
     return {
         name: intfName,
-        address: netData.address,
-        bits: 32 - parseInt(netData.cidr.slice(-2)) // The slice will break for large subnets
+        address: intfData.address,
+        bits: 32 - parseInt(intfData.cidr.slice(-2)) // The slice will break for large subnets
     };
 } 
 
