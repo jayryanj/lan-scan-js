@@ -20,7 +20,7 @@ function getInterface() {
     if (platform === "linux" || platform === "win32") {
         intfNames = Object.keys(intfs);
         intfName = intfNames.find(intf => {
-            return (intf == "Ethernet" || intf == "Wi-Fi" || intf.substring(0,2) == "en" || intf.substring(0, 2) == "wl")
+            return (intf == "Ethernet" || intf == "Wi-Fi" || intf.substring(0,2) == "en" || intf.substring(0, 2) == "wl" || intf.substring(0,3) ===  "eth")
         }); 
 
         intfData = intfs[intfName].find(net => {
