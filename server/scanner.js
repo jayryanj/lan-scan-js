@@ -31,6 +31,7 @@ function getInterface() {
     return {
         name: intfName,
         address: intfData.address,
+        netmask: intfData.netmask,
         bits: 32 - parseInt(intfData.cidr.slice(-2)) // The slice will break for large subnets
     };
 } 
