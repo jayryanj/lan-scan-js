@@ -1,4 +1,5 @@
 "use strict";
+
 const os = require('os');
 const ping = require('net-ping');
 const net = require('net');
@@ -25,6 +26,7 @@ function getInterface() {
             return (intf == "Ethernet" || intf == "Wi-Fi" || intf.substring(0,2) == "en" || intf.substring(0, 2) == "wl" || intf.substring(0,3) ===  "eth")
         }); 
 
+        // Only support IPv4
         intfData = intfs[intfName].find(net => {
             return net.family === "IPv4"
         })
@@ -34,7 +36,7 @@ function getInterface() {
         name: intfName,
         address: intfData.address,
         netmask: intfData.netmask,
-        bits: 32 - parseInt(intfData.cidr.split('/')[1])
+        bits: 32 - parseInt(intfData.cidr.split('/')[1]) // Gets the bits out of CIDR notation (the bits come after '/')
     };
 
 } 
@@ -42,27 +44,27 @@ function getInterface() {
 
 function getAddresses(hostAddress, netmask, bits) {
 
-    let addresses = [];
+    const addresses = [];
 
-    // Arrow function for splitting an addresss into its individual bytes and convert to decimals
+    // Function for splitting an addresss into an array of its individual octets
     const convertAddress = (ipv4) => ipv4.split('.').map((byte) => parseInt(byte));
 
-    const hostAddressByteArray = convertAddress(hostAddress);
-    const netmaskByteArray = convertAddress(netmask);
+    const hostAddressOctets = convertAddress(hostAddress);
+    const netmaskOctets = convertAddress(netmask);
 
     // Calculate the network address by taking the bitwise AND of the subnet mask and the host address
-    let netAddressByteArray = hostAddressByteArray.map((addressByte, index) => {return addressByte & netmaskByteArray[index] });
-
-    let a = 5;
+    const netAddressOctets = hostAddressOctets.map((addressByte, index) => {
+        return addressByte & netmaskOctets[index] 
+    });
 
     for (let n = 0; n < 2**bits; n++) {
-        // IPv4 address = a.b.c.d (i.e., 192.168.0.5 which means a = 192, b = 168, c = 0, d = 5)
-        let d = netAddressByteArray[3] + n;
-        let c = netAddressByteArray[2] + Math.floor(d / 256);
-        let b = netAddressByteArray[1] + Math.floor(c / 256);
-        let a = netAddressByteArray[0] + Math.floor(b / 256);
+        // IPv4 address is split into 4 octets: x.x.x.x (i.e., 192.168.0.2) where each octet (x) is an int between 0-255
+        const octetOne = netAddressOctets[3] + n;
+        const octetTwo = netAddressOctets[2] + Math.floor(octetOne / 256);
+        const octetThree = netAddressOctets[1] + Math.floor(octetTwo / 256);
+        const octetFour = netAddressOctets[0] + Math.floor(octetThree / 256);
 
-        let address = `${a % 256}.${b % 256}.${c % 256}.${d % 256}`;
+        const address = `${octetFour % 256}.${octetThree % 256}.${octetTwo % 256}.${octetOne % 256}`;
 
         addresses.push(address);
     }
@@ -75,7 +77,5 @@ function getAddresses(hostAddress, netmask, bits) {
     
 }
 
-
-scan()
 
 module.exports = scan;
