@@ -3,16 +3,54 @@
 const os = require('os');
 const ping = require('net-ping');
 const net = require('net');
+const EventEmitter = require('events');
 
 
+async function getResults() {
+    let results = await scan();
+    console.log(results)
+}
+ 
+/**
+ * Scans the network using ICMP Echo to scan the network.
+ */
 async function scan() {
+    const options = {
+        networkProtocol: ping.NetworkProtocol.ipv4,
+        retries: 2,
+        timeout: 3000,
+        ttl: 128
+    }
+
+    const discoveredHosts = [];
 
     const intf = getInterface();
     const addresses = getAddresses(intf.address, intf.netmask, intf.bits);
 
+    const session = ping.createSession(options);
+
+    for(const host of addresses) {
+        session.pingHost(host, (error, target, sent, rcvd) => {
+            if(error) {
+                console.log(`${target}: ${error}`);
+            } else {
+                console.log(`${target}: Alive (time=${rcvd - sent}ms)`);
+                discoveredHosts.push(target);
+            }
+        });
+    }
+
+    return discoveredHosts;
 }
 
 
+
+/**
+ * Chooses and returns a network interface to scan. 
+ * 
+ * @returns an object containing info on the host network interface
+ * 
+ */
 function getInterface() {
 
     // 'interface' is a reserved word in strict mode, so it's abbreviated here. 
@@ -42,6 +80,15 @@ function getInterface() {
 } 
 
 
+/** 
+ * Gets all possible IPv4 addresses in the network to scan.
+ * 
+ * @param {string} hostAddress - the host's IPv4 address
+ * @param {string} netmask  - the network's subnet mask
+ * @param {int} bits - bits available from CIDR notation
+ * 
+ * @returns an array of IP addresses
+ */
 function getAddresses(hostAddress, netmask, bits) {
 
     const addresses = [];
@@ -77,5 +124,6 @@ function getAddresses(hostAddress, netmask, bits) {
     
 }
 
+getResults();
 
 module.exports = scan;
