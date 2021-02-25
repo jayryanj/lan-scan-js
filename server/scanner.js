@@ -6,43 +6,43 @@ const net = require('net');
 const EventEmitter = require('events');
 
 
-async function getResults() {
-    let results = await scan();
-    console.log(results)
+function test() {
+    let results = scan();
+    results
+        .then(hosts => {console.log(`Hosts: ${hosts}`)})
+        .catch(error => {console.log(error)})
+
 }
  
 /**
  * Scans the network using ICMP Echo to scan the network.
  */
-async function scan() {
+function scan() {
     const options = {
         networkProtocol: ping.NetworkProtocol.ipv4,
-        retries: 2,
+        retries: 0,
         timeout: 3000,
         ttl: 128
     }
 
-    const discoveredHosts = [];
-
     const intf = getInterface();
     const addresses = getAddresses(intf.address, intf.netmask, intf.bits);
-
     const session = ping.createSession(options);
+    let testData = "hello"
 
-    for(const host of addresses) {
-        session.pingHost(host, (error, target, sent, rcvd) => {
-            if(error) {
-                console.log(`${target}: ${error}`);
+    let promise = new Promise((resolve, reject) => {
+        session.pingHost('192.168.0.1', (error, target, sent, rcvd) =>{
+            if (error) {
+                reject("Host unreachable")
             } else {
-                console.log(`${target}: Alive (time=${rcvd - sent}ms)`);
-                discoveredHosts.push(target);
+                resolve(target);
             }
-        });
-    }
+        })
+    })
 
-    return discoveredHosts;
+    return promise
+    
 }
-
 
 
 /**
@@ -124,6 +124,6 @@ function getAddresses(hostAddress, netmask, bits) {
     
 }
 
-getResults();
+test(); // This is just for testing
 
 module.exports = scan;

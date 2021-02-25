@@ -1,5 +1,6 @@
 const router = require('express').Router();
 const { request, response } = require('express');
+const scan = require('./scanner');
 
 
 router.get('/' , (request, response) => {
@@ -7,7 +8,10 @@ router.get('/' , (request, response) => {
 });
 
 router.get('/scan', (request, response) => {
-    // Call the scanner module
+    scan()
+        .then(hosts => {
+            response.status(200).json(hosts);
+        })
 });
 
 module.exports = router;
