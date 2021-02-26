@@ -36,11 +36,19 @@ h1 {
   margin-right: auto;
   max-width: 60%;
   margin-bottom: 200px;
+  box-shadow: 0 0 10px 2px rgb(161, 161, 161);
 }
 
 .table-header {
   font-size: 30px;
   font-family: Raleway;
+}
+
+.table-host-container {
+  border: 3px solid rgb(25, 121, 25);
+  width: 35%;
+  border-radius: 5px;
+  min-width: fit-content;
 }
 
 .button {
@@ -58,3 +66,9 @@ h1 {
   background-color: rgb(151, 167, 185);
   border: none;
 }
+
+.dropdown-container {
+  margin-top: 20px;
+}
+
+

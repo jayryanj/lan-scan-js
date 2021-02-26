@@ -6,10 +6,13 @@ import {
     Button,
     Table,
     Container,
-    Fade
+    Fade,
+    DropdownButton,
+    Dropdown
 } from 'react-bootstrap';
 
 class App extends Component{
+
     constructor(props) {
         super(props)
 
@@ -39,10 +42,16 @@ class App extends Component{
         return this.state.hosts.map((host) => {
             return (
                 <tr>
-                    <td>{host}</td>
+                    <td>
+                        <Container className="table-host-container">{host}</Container>
+                    </td>
                 </tr>
             )
         })
+    }
+
+    setRefresh() {
+
     }
     
     render() {
@@ -54,13 +63,28 @@ class App extends Component{
                 </Container>
 
                 <Container>
-                    <p className='description'>Scan your network for connected devices! LAN-Scan is a web tool implemented entirely in JavaScript using Node.js. Use the "Scan" button below to begin scanning your network for connected devices.</p>
+                    <p className='description'>Scan your network for connected devices! LAN-Scan is a scanning tool implemented entirely in JavaScript using Node.js. Use the "Scan" button below to begin scanning your network for connected devices. Any device found will be displayed with their IP address below.</p>
                 </Container>
                 {this.state.isLoading ? 
                     <Button disabled className='button' variant='primary' size='lg'>Scanning...</Button> 
                     :
                     <Button onClick={this.callAPI} className='button' variant='primary' size='lg'>Scan</Button> 
                 }
+
+                <Container className="dropdown-container">
+                    <Dropdown>
+                        <Dropdown.Toggle id="dropdown-basic">
+                            Refresh Rate
+                        </Dropdown.Toggle>
+
+                        <Dropdown.Menu>
+                            <Dropdown.Item href="#/action-1">None</Dropdown.Item>
+                            <Dropdown.Item href="#/action-1">1 sec</Dropdown.Item>
+                            <Dropdown.Item href="#/action-2">5 sec</Dropdown.Item>
+                            <Dropdown.Item href="#/action-3">10 ssec</Dropdown.Item>
+                        </Dropdown.Menu>
+                    </Dropdown>
+                </Container>
                 
 
                 <Container fluid className='table-container'>
