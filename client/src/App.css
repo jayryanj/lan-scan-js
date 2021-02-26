@@ -1,8 +1,58 @@
+@font-face {
+  font-family: Raleway;
+  src: url('./resources/Raleway-VariableFont_wght.ttf')
+}
+
 .App {
   text-align: center;
+  background-color:  rgb(252, 252, 252);
+}
+
+h1 {
+  font-family: Raleway;
+  font-size: 60px;
+}
+
+.header-container {
+  padding-top: 2% !important;
+}
+
+.description {
+  margin-top: 50px;
+}
+
+.table-container {
+  background-color: white;
+  margin-top: 160px;
+  padding-top: 100px;
+  padding-left: 10%;
+  padding-right: 10%;
 }
 
 .table-main {
-  margin-top: 10%;
-  background-color: rgb(248, 248, 248);
+  font-size: 25px;
+  margin-left: auto;
+  margin-right: auto;
+  max-width: 60%;
+}
+
+.table-header {
+  font-size: 30px;
+  font-family: Raleway;
+}
+
+.button {
+  margin-top: 50px;
+  width: 380px !important;
+  background-color: rgb(171, 192, 216);
+  outline: none;
+  border: none;
+  font-family: Raleway;
+  font-size: 30px;
+}
+
+.button:active , .button:hover{
+  outline: none !important;
+  background-color: rgb(151, 167, 185);
+  border: none;
 }

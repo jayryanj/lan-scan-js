@@ -17,13 +17,18 @@ class App extends Component{
     render() {
         return (
             <div className="App">
-                <h1>lan-scan-js</h1>
-                <Button variant='primary' size='lg'>Scan</Button>
+                <Container className="header-container">
+                    <h1>LAN-Scan</h1>
+                </Container>
                 <Container>
-                    <Table className="table-main">
+                    <p className='description'>Scan your network for connected devices! LAN-Scan is a scanning utility implemented in JavaScript using Node.js. Use the "Scan" button below to begin scanning your network for connected devices.</p>
+                </Container>
+                <Button color='green' className='button' variant='primary' size='lg'>Scan</Button>
+                <Container fluid className='table-container'>
+                    <Table hover striped borderless className="table-main">
                         <thead>
                             <tr>
-                                <th>Hosts</th>
+                                <th className='table-header'>Devices Found:</th>
                             </tr>
                         </thead>
                         <tbody>
