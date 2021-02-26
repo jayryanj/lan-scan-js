@@ -5,17 +5,10 @@ const ping = require('net-ping');
 const net = require('net');
 const EventEmitter = require('events');
 
-
-function test() {
-    let results = scan();
-    results
-        .then(hosts => {console.log(`Hosts: ${hosts}`)})
-        .catch(error => {console.log(error)})
-
-}
  
 /**
  * Scans the network using ICMP Echo to scan the network.
+ * @returns a Promise that resolves to an array of each ping session.
  */
 function scan() {
     const options = {
@@ -28,20 +21,32 @@ function scan() {
     const intf = getInterface();
     const addresses = getAddresses(intf.address, intf.netmask, intf.bits);
     const session = ping.createSession(options);
-    let testData = "hello"
 
-    let promise = new Promise((resolve, reject) => {
-        session.pingHost('192.168.0.1', (error, target, sent, rcvd) =>{
-            if (error) {
-                reject("Host unreachable")
-            } else {
-                resolve(target);
-            }
+    let pingHelper = (host) => {
+        return new Promise((resolve, reject) => {
+            session.pingHost(host, (error, target, sent, rcvd) =>{
+                if (error) {
+                    reject("Host unreachable")
+                } else {
+                    resolve(target);
+                }
+            })
         })
-    })
+    }
 
-    return promise
-    
+    let PromiseArray = []; 
+
+    for (let address of addresses) {
+        try {
+            let results = pingHelper(address)
+            PromiseArray.push(results)
+        } catch(error) {
+            console.log(error)
+        }
+    }
+
+    return Promise.allSettled(PromiseArray);
+
 }
 
 
@@ -124,6 +129,14 @@ function getAddresses(hostAddress, netmask, bits) {
     
 }
 
-test(); // This is just for testing
+// Test function to mimic the Promise handling at the controller
+function test() {
+    scan()
+        .then(results => {
+            let alive = results.filter(obj => obj.status == 'fulfilled').map(obj => {return obj.value})
+            console.log(alive)
+        })
+        .catch(error => {console.log(error)})
+}
 
 module.exports = scan;

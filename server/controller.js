@@ -9,9 +9,14 @@ router.get('/' , (request, response) => {
 
 router.get('/scan', (request, response) => {
     scan()
-        .then(hosts => {
-            response.status(200).json(hosts);
-        })
+    .then(results => {
+        let alive = results.filter(obj => obj.status == 'fulfilled').map(obj => {return obj.value})
+        console.log(alive);
+        response.status(200).json({hosts: alive})
+    })
+    .catch(error => {console.log(error)})
+
+    
 });
 
 module.exports = router;
