@@ -8,6 +8,7 @@ router.get('/' , (request, response) => {
 });
 
 router.get('/scan', (request, response) => {
+    console.log("Entered /api/scan");
     scan()
     .then(results => {
         let alive = results.filter(obj => obj.status == 'fulfilled').map(obj => {return obj.value})
