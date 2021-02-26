@@ -8,6 +8,7 @@ const EventEmitter = require('events');
  
 /**
  * Scans the network using ICMP Echo to scan the network.
+ * 
  * @returns a Promise that resolves to an array of each ping session.
  */
 function scan() {
@@ -17,14 +18,22 @@ function scan() {
         timeout: 3000,
         ttl: 128
     }
+    const promiseArray = []; 
 
+    // Get interface and all possible addresses in the subnet
     const intf = getInterface();
     const addresses = getAddresses(intf.address, intf.netmask, intf.bits);
+
     const session = ping.createSession(options);
 
-    let pingHelper = (host) => {
+    /**
+     * Helper function to return a Promise for pinging an individual IP address
+     * 
+     * @param {String} ip the IPv4 address to ping
+     */
+    const scanHelper = (ip) => {
         return new Promise((resolve, reject) => {
-            session.pingHost(host, (error, target, sent, rcvd) =>{
+            session.pingHost(ip, (error, target, sent, rcvd) =>{
                 if (error) {
                     reject("Host unreachable")
                 } else {
@@ -34,18 +43,19 @@ function scan() {
         })
     }
 
-    let PromiseArray = []; 
-
+    // Creates an array of Promises for pinging each address using scanHelper()
     for (let address of addresses) {
         try {
-            let results = pingHelper(address)
-            PromiseArray.push(results)
+            let results = scanHelper(address)
+            promiseArray.push(results)
         } catch(error) {
             console.log(error)
         }
     }
 
-    return Promise.allSettled(PromiseArray);
+    // Return the Promise that's returned by Promise.allSettled() 
+    // The value of this Promise will be an array containing statuses and values of each Promise in promiseArray
+    return Promise.allSettled(promiseArray);
 
 }
 
