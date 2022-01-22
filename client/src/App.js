@@ -62,7 +62,7 @@ class App extends Component{
                 <Container>
                     <Row>
                         <Col md={12}>
-                            <h1>LAN Scan</h1>
+                            <h1>LAN-Scan-JS</h1>
                             
                             <p className='description'>Scan your network for connected devices! LAN-Scan is a scanning tool implemented entirely in JavaScript using Node.js. Use the "Scan" button below to begin scanning your network for connected devices. Any device found will be displayed with their IP address below.</p>
                             
