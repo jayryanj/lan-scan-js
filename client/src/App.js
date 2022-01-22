@@ -8,6 +8,8 @@ import {
     Container,
     Fade,
     DropdownButton,
+    Row,
+    Col,
     Dropdown
 } from 'react-bootstrap';
 
@@ -57,52 +59,38 @@ class App extends Component{
     render() {
         return (
             <div className="App">
-
-                <Container className="header-container">
-                    <h1>LAN-Scan</h1>
-                </Container>
-
                 <Container>
-                    <p className='description'>Scan your network for connected devices! LAN-Scan is a scanning tool implemented entirely in JavaScript using Node.js. Use the "Scan" button below to begin scanning your network for connected devices. Any device found will be displayed with their IP address below.</p>
+                    <Row>
+                        <Col md={12}>
+                            <h1>LAN Scan</h1>
+                            
+                            <p className='description'>Scan your network for connected devices! LAN-Scan is a scanning tool implemented entirely in JavaScript using Node.js. Use the "Scan" button below to begin scanning your network for connected devices. Any device found will be displayed with their IP address below.</p>
+                            
+                            {this.state.isLoading ? 
+                                <Button disabled className='button loading' variant='primary' size='lg'>Scanning...</Button> 
+                                :
+                                <Button onClick={this.callAPI} className='button' variant='primary' size='lg'>Scan</Button> 
+                            }
+                        </Col>
+                        
+                        <Col md={12}>
+                            <Fade in={this.state.loaded}>
+                                <div>
+                                    <h2>Found {this.state.hosts.length} devices</h2>
+                                    <ul className="nodes">
+                                    {
+                                        this.state.hosts.map((host) => {
+                                            return (
+                                                <li className='node'>{host}</li>
+                                            );
+                                        })
+                                    }
+                                    </ul>
+                                </div>
+                            </Fade>
+                        </Col>
+                    </Row>
                 </Container>
-                {this.state.isLoading ? 
-                    <Button disabled className='button' variant='primary' size='lg'>Scanning...</Button> 
-                    :
-                    <Button onClick={this.callAPI} className='button' variant='primary' size='lg'>Scan</Button> 
-                }
-
-                <Container className="dropdown-container">
-                    <Dropdown>
-                        <Dropdown.Toggle id="dropdown-basic">
-                            Refresh Rate
-                        </Dropdown.Toggle>
-
-                        <Dropdown.Menu>
-                            <Dropdown.Item href="#/action-1">None</Dropdown.Item>
-                            <Dropdown.Item href="#/action-1">1 sec</Dropdown.Item>
-                            <Dropdown.Item href="#/action-2">5 sec</Dropdown.Item>
-                            <Dropdown.Item href="#/action-3">10 ssec</Dropdown.Item>
-                        </Dropdown.Menu>
-                    </Dropdown>
-                </Container>
-                
-
-                <Container fluid className='table-container'>
-                    <Fade in={this.state.loaded}>
-                        <Table hover striped borderless className="table-main">
-                            <thead>
-                                <tr>
-                                    <th className='table-header'>Devices Found:</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                {this.renderTableData()}
-                            </tbody>
-                        </Table>
-                    </Fade>
-
-                </Container>
-                
             </div>
         );
     }
